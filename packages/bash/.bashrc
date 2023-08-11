@@ -13,7 +13,7 @@ export GIT_PS1_SHOWSTASHSTATE=yes
 export GIT_PS1_SHOWUNTRACKEDFILES=yes
 host=''
 if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
-    host='@\h'
+	host='@\h'
 fi
 PROMPT_COMMAND='__git_ps1 "\u${host}:\W" "\\\$ "'
 
@@ -83,10 +83,10 @@ fi
 # sources /etc/bash.bashrc).
 if ! shopt -oq posix; then
 	if [ -f /usr/share/bash-completion/bash_completion ]; then
-        # shellcheck disable=SC1091 # sourced file may or may not exist
+		# shellcheck disable=SC1091 # sourced file may or may not exist
 		. /usr/share/bash-completion/bash_completion
 	elif [ -f /etc/bash_completion ]; then
-        # shellcheck disable=SC1091 # sourced file may or may not exist
+		# shellcheck disable=SC1091 # sourced file may or may not exist
 		. /etc/bash_completion
 	fi
 fi
@@ -94,7 +94,7 @@ fi
 if hash brew 2>/dev/null; then
 	BREW_PREFIX="$(brew --prefix)"
 	COMPLETION_DIR="$BREW_PREFIX/etc/bash_completion.d"
-    # shellcheck disable=SC1091 # sourced file may or may not exist
+	# shellcheck disable=SC1091 # sourced file may or may not exist
 	[[ -r "$BREW_PREFIX/etc/bash_completion" ]] && . "$BREW_PREFIX/etc/bash_completion"
 fi
 
@@ -105,7 +105,7 @@ fi
 
 # Add fzf bindings, and set its default find utility to fd, if possible.
 if [ -f "$HOME/.fzf.bash" ]; then
-    # shellcheck disable=SC1091 # sourced file may or may not exist
+	# shellcheck disable=SC1091 # sourced file may or may not exist
 	. "$HOME/.fzf.bash"
 	if hash fd 2>/dev/null; then
 		export FZF_DEFAULT_COMMAND="fd -HI -t f -E '.{git,svn,DS_Store}'"
@@ -113,43 +113,43 @@ if [ -f "$HOME/.fzf.bash" ]; then
 		export FZF_ALT_C_COMMAND="fd -LHI -t d -E '.{git,svn}'"
 	fi
 
-    fzf-git-branches() {
-        git branch "$@" | \
-            grep -v '^\*' | \
-            cut -c 3- | \
-            fzf --multi --preview "git log {} --" --preview-window=down,70% \
-            --header="git branch"
-    }
+	fzf-git-branches() {
+		git branch "$@" |
+			grep -v '^\*' |
+			cut -c 3- |
+			fzf --multi --preview "git log {} --" --preview-window=down,70% \
+				--header="git branch"
+	}
 
-    git-co() {
-        local branches
-        mapfile -t branches < <(fzf-git-branches -a)
-        if [ ${#branches[@]} -ne 1 ]; then
-            echo "Exactly one branch must be selected for checkout" >&2
-            return 1
-        fi
-        git checkout "${branches[0]}"
-    }
+	git-co() {
+		local branches
+		mapfile -t branches < <(fzf-git-branches -a)
+		if [ ${#branches[@]} -ne 1 ]; then
+			echo "Exactly one branch must be selected for checkout" >&2
+			return 1
+		fi
+		git checkout "${branches[0]}"
+	}
 
-    git-br-del() {
-        local branches
-        mapfile -t branches < <(fzf-git-branches)
-        if [ ${#branches[@]} -lt 1 ]; then
-            echo "At least one branch must be selected for deletion" >&2
-            return 1
-        fi
-        git branch -df "${branches[0]}"
-    }
+	git-br-del() {
+		local branches
+		mapfile -t branches < <(fzf-git-branches)
+		if [ ${#branches[@]} -lt 1 ]; then
+			echo "At least one branch must be selected for deletion" >&2
+			return 1
+		fi
+		git branch -df "${branches[0]}"
+	}
 
-    alias fzfpf="fzf --preview 'less {}' --bind shift-up:preview-page-up,shift-down:preview-page-down --preview-window=down,70%"
+	alias fzfpf="fzf --preview 'less {}' --bind shift-up:preview-page-up,shift-down:preview-page-down --preview-window=down,70%"
 fi
 
 # Start an ssh agent, or use one that is already running
 ssh-add -l &>/dev/null
 if [ "$?" == 2 ]; then
 	# No agent is being used. Try to use one that is already running.
-	test -r ~/.ssh/agent \
-		&& eval "$(<~/.ssh/agent)" >/dev/null
+	test -r ~/.ssh/agent &&
+		eval "$(<~/.ssh/agent)" >/dev/null
 
 	ssh-add -l &>/dev/null
 	if [ "$?" == 2 ]; then
