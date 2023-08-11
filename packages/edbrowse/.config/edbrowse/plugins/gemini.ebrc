@@ -1,0 +1,15 @@
+plugin {
+    type = */*
+    desc = Gemini
+    protocol = gemini
+    program = ~/.config/edbrowse/plugins/ebgmni.py %i
+    outtype = h
+}
+
+plugin {
+    type = */*
+    desc = X509 certificate
+    protocol = x509certb64
+    program = printf %s %i | sed 's;^x509certb64://;;' | tr '_-' '/+'  | openssl base64 -A -d | openssl x509 -inform der -subject -issuer -startdate -enddate -serial -fingerprint
+    outtype = t
+}

@@ -1,0 +1,6 @@
+[submodule "packages/tmux/.tmux/plugins/tpm"]
+	path = packages/tmux/.tmux/plugins/tpm
+	url = https://github.com/tmux-plugins/tpm
+[submodule "packages/tmux/.tmux/plugins/tmux-urlview"]
+	path = packages/tmux/.tmux/plugins/tmux-urlview
+	url = https://github.com/tmux-plugins/tmux-urlview

@@ -1,0 +1,5 @@
+require('niko.plugins')
+require('niko.globals')
+require('niko.mappings')
+require('niko.settings')
+require('niko.statusline')
