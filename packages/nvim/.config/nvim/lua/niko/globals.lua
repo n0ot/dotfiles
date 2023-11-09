@@ -1,14 +1,13 @@
 P = function(v)
-    print(vim.inspect(v))
-    return v
+  print(vim.inspect(v))
+  return v
 end
 
 SaveAndSource = function()
-    if vim.bo.filetype == 'lua' then
-    vim.cmd('write')
+  vim.cmd('write')
+  if vim.bo.filetype == 'lua' then
     vim.cmd('luafile %')
-else
-    vim.cmd('write')
+  else
     vim.cmd('source %')
-    end
+  end
 end

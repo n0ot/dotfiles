@@ -7,6 +7,7 @@ local nnoremap = require('niko.keymap').nnoremap
 
 nnoremap('<leader>ff', builtin.find_files)
 nnoremap('<leader>fg', builtin.live_grep)
+nnoremap('<leader>fG', vim.cmd.LiveGrepGitRoot)
 nnoremap('<leader>fb', builtin.buffers)
 nnoremap('<leader>fh', builtin.help_tags)
 nnoremap('<leader>fB', builtin.current_buffer_fuzzy_find)
