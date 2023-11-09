@@ -92,7 +92,7 @@ plugin {
     type = audio
     desc = streaming audio
     protocol = rtsp,pnm,sdp,pls
-    suffix = rm,ra,ram,ogg,mp3,mp4,m3u,m3u8,opus,flac
+    suffix = rm,ra,ram,ogg,mp3,mp4,m3u,m3u8,opus,flac,m4a
     content = audio/x-scpls,audio/mpeg,application/pls+xml
     program = mpv --really-quiet --no-audio-display --no-ytdl --af=scaletempo=stride=20:overlap=1 %i
 }
@@ -291,4 +291,14 @@ function+explsh {
 
 function:gopkg {
     b https://pkg.go.dev/~1
+}
+
+function+oldred {
+    db0
+    0A
+    1s/www/old/
+    bw
+    db1
+    nostack g
+    /^submitted 
 }
