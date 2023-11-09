@@ -107,7 +107,7 @@ function:init {
     dx
     endm+
     rl+
-    z37
+    z38
 ls=s
     db1
 }
