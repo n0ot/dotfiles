@@ -1,29 +1,66 @@
-local nnoremap = require("niko.keymap").nnoremap
-
-local ok, mason, mason_lspconfig
+local ok, lspconfig, mason, mason_lspconfig
+ok, lspconfig = pcall(require, 'lspconfig')
+if not ok then
+  return
+end
 ok, mason = pcall(require, 'mason')
 if not ok then
   return
 end
-ok, mason_lspconfig = pcall(require, "mason-lspconfig")
+ok, mason_lspconfig = pcall(require, 'mason-lspconfig')
 if not ok then
   return
 end
 
+-- Setup neovim lua configuration
+require('neodev').setup()
+
+-- nvim-cmp supports additional completion capabilities, so broadcast that to servers
+local capabilities = vim.lsp.protocol.make_client_capabilities()
+capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
+
+local function on_attach(_, bufnr)
+  -- Enable completion triggered by <c-x><c-o>
+  vim.bo.omnifunc = 'v:lua.vim.lsp.omnifunc'
+
+  -- Mappings.
+  -- See `:help vim.lsp.*` for documentation on any of the below functions
+  vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, { buffer = bufnr })
+  vim.keymap.set('n', 'gd', vim.lsp.buf.definition, { buffer = bufnr })
+  vim.keymap.set('n', 'K', vim.lsp.buf.hover, { buffer = bufnr })
+  vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, { buffer = bufnr })
+  vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, { buffer = bufnr })
+  vim.keymap.set('n', '<leader>lwa', vim.lsp.buf.add_workspace_folder, { buffer = bufnr })
+  vim.keymap.set('n', '<leader>lwr', vim.lsp.buf.remove_workspace_folder, { buffer = bufnr })
+  vim.keymap.set('n', '<leader>lwl', function() print(vim.inspect(vim.lsp.buf.list_workspace_folders())) end,
+    { buffer = bufnr })
+  vim.keymap.set('n', '<leader>lD', vim.lsp.buf.type_definition, { buffer = bufnr })
+  vim.keymap.set('n', '<leader>lrn', vim.lsp.buf.rename, { buffer = bufnr })
+  vim.keymap.set('n', '<leader>lca', vim.lsp.buf.code_action, { buffer = bufnr })
+  vim.keymap.set('n', 'gr', vim.lsp.buf.references, { buffer = bufnr })
+  vim.keymap.set('n', '<leader>le', vim.diagnostic.open_float, { buffer = bufnr })
+  vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { buffer = bufnr })
+  vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { buffer = bufnr })
+  vim.keymap.set('n', '<leader>lq', vim.diagnostic.setloclist, { buffer = bufnr })
+  vim.keymap.set('n', '<leader>lf', vim.lsp.buf.format, { buffer = bufnr })
+end
+
 -- per-server configuration
 local servers = {
-  clangd = {},
   efm = {
     filetypes = {
       'markdown',
       'sh',
     },
   },
+  golangci_lint_ls = {},
   gopls = {},
   lua_ls = {
-    Lua = {
-      workspace = { checkThirdParty = false },
-      telemetry = { enable = false },
+    settings = {
+      Lua = {
+        workspace = { checkThirdParty = false },
+        telemetry = { enable = false },
+      },
     },
   },
   pyright = {},
@@ -40,54 +77,21 @@ local servers = {
     },
   },
   tsserver = {},
+  zls = {},
 }
 
--- Setup neovim lua configuration
-require('neodev').setup()
+local function setup_server(server, config)
+  config = vim.tbl_deep_extend("force", {
+    on_attach = on_attach,
+    capabilities = capabilities,
+  }, config)
 
--- nvim-cmp supports additional completion capabilities, so broadcast that to servers
-local capabilities = vim.lsp.protocol.make_client_capabilities()
-capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
-
-local function on_attach(_, bufnr)
-  -- Enable completion triggered by <c-x><c-o>
-  vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
-
-  -- Mappings.
-  -- See `:help vim.lsp.*` for documentation on any of the below functions
-  nnoremap('gD', vim.lsp.buf.declaration, { buffer = bufnr })
-  nnoremap('gd', vim.lsp.buf.definition, { buffer = bufnr })
-  nnoremap('K', vim.lsp.buf.hover, { buffer = bufnr })
-  nnoremap('gi', vim.lsp.buf.implementation, { buffer = bufnr })
-  nnoremap('<C-k>', vim.lsp.buf.signature_help, { buffer = bufnr })
-  nnoremap('<leader>lwa', vim.lsp.buf.add_workspace_folder, { buffer = bufnr })
-  nnoremap('<leader>lwr', vim.lsp.buf.remove_workspace_folder, { buffer = bufnr })
-  nnoremap('<leader>lwl', function() print(vim.inspect(vim.lsp.buf.list_workspace_folders())) end,
-    { buffer = bufnr })
-  nnoremap('<leader>lD', vim.lsp.buf.type_definition, { buffer = bufnr })
-  nnoremap('<leader>lrn', vim.lsp.buf.rename, { buffer = bufnr })
-  nnoremap('<leader>lca', vim.lsp.buf.code_action, { buffer = bufnr })
-  nnoremap('gr', vim.lsp.buf.references, { buffer = bufnr })
-  nnoremap('<leader>le', vim.diagnostic.open_float, { buffer = bufnr })
-  nnoremap('[d', vim.diagnostic.goto_prev, { buffer = bufnr })
-  nnoremap(']d', vim.diagnostic.goto_next, { buffer = bufnr })
-  nnoremap('<leader>lq', vim.diagnostic.setloclist, { buffer = bufnr })
-  nnoremap('<leader>lf', vim.lsp.buf.format, { buffer = bufnr })
+  lspconfig[server].setup(config)
 end
 
 mason.setup()
--- Ensure the servers above are installed
-mason_lspconfig.setup {
-  ensure_installed = vim.tbl_keys(servers),
-}
+mason_lspconfig.setup {}
 
-mason_lspconfig.setup_handlers {
-  function(server_name)
-    require('lspconfig')[server_name].setup {
-      capabilities = capabilities,
-      on_attach = on_attach,
-      settings = servers[server_name],
-      filetypes = (servers[server_name] or {}).filetypes,
-    }
-  end,
-}
+for server, config in pairs(servers) do
+  setup_server(server, config)
+end

@@ -51,24 +51,21 @@ vim.g.netrw_banner = 0
 
 
 -- Key mappings
-local nnoremap = require('niko.keymap').nnoremap
-local xnoremap = require('niko.keymap').xnoremap
-
 -- Navigate and manage buffers
-nnoremap('<leader>j', vim.cmd.bnext)
-nnoremap('<leader>k', vim.cmd.bprev)
-nnoremap('<leader>c', vim.cmd.bdel)
-nnoremap('<leader>C', function() vim.cmd.bdel{ bang = true } end)
+vim.keymap.set('n', '<leader>j', vim.cmd.bnext)
+vim.keymap.set('n', '<leader>k', vim.cmd.bprev)
+vim.keymap.set('n', '<leader>c', vim.cmd.bdel)
+vim.keymap.set('n', '<leader>C', function() vim.cmd.bdel{ bang = true } end)
 
-nnoremap('<leader>e', '<Cmd>Explore<Cr>')
+vim.keymap.set('n', '<leader>e', '<Cmd>Explore<Cr>')
 
 -- Select last pasted text
-nnoremap('gp', '`[' .. vim.fn.strpart(vim.fn.getregtype(), 0, 1) .. '`]')
+vim.keymap.set('n', 'gp', '`[' .. vim.fn.strpart(vim.fn.getregtype(), 0, 1) .. '`]')
 
 -- Delete to null register
-xnoremap('<Leader>d', '"_d')
+vim.keymap.set('x', '<Leader>d', '"_d')
 
-nnoremap('<Leader><Leader>x', SaveAndSource)
+vim.keymap.set('n', '<Leader><Leader>x', SaveAndSource)
 
 
 -- Statusline

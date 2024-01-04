@@ -3,14 +3,12 @@ if not ok then
 	return
 end
 
-local nnoremap = require('niko.keymap').nnoremap
+vim.keymap.set('n', '<leader>ff', builtin.find_files)
+vim.keymap.set('n', '<leader>fg', builtin.live_grep)
+vim.keymap.set('n', '<leader>fG', vim.cmd.LiveGrepGitRoot)
+vim.keymap.set('n', '<leader>fb', builtin.buffers)
+vim.keymap.set('n', '<leader>fh', builtin.help_tags)
+vim.keymap.set('n', '<leader>fB', builtin.current_buffer_fuzzy_find)
 
-nnoremap('<leader>ff', builtin.find_files)
-nnoremap('<leader>fg', builtin.live_grep)
-nnoremap('<leader>fG', vim.cmd.LiveGrepGitRoot)
-nnoremap('<leader>fb', builtin.buffers)
-nnoremap('<leader>fh', builtin.help_tags)
-nnoremap('<leader>fB', builtin.current_buffer_fuzzy_find)
-
-nnoremap('<leader>flr', builtin.lsp_references)
-nnoremap('<leader>fls', builtin.lsp_document_symbols)
+vim.keymap.set('n', '<leader>flr', builtin.lsp_references)
+vim.keymap.set('n', '<leader>fls', builtin.lsp_document_symbols)
