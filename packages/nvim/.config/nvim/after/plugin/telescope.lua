@@ -1,12 +1,17 @@
 local ok, telescope = pcall(require, 'telescope')
 if not ok then
-    return
+  return
 end
 
 telescope.setup({
-    defaults = {
-        layout = 'vertical'
-    }
+  defaults = {
+    border = false,
+    wrap_results = true,
+    layout_config = {
+      vertical = { height = 0.999, width = 0.999 },
+    },
+    layout_strategy = 'vertical'
+  }
 })
 
 require('telescope').load_extension('fzf')
@@ -41,7 +46,7 @@ local function live_grep_git_root()
   local git_root = find_git_root()
   if git_root then
     require('telescope.builtin').live_grep({
-      search_dirs = {git_root},
+      search_dirs = { git_root },
     })
   end
 end
