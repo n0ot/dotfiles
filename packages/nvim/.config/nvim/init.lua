@@ -33,6 +33,7 @@ vim.bo.expandtab = true
 vim.o.breakindent = true
 vim.o.completeopt = 'menuone,noselect'
 vim.o.termguicolors = true
+vim.wo.signcolumn = "yes"
 
 -- Use US English spelling dictionary
 -- Use set spell to turn it on
