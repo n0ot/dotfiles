@@ -21,6 +21,7 @@ if os.path.exists(url):
 
 chrome_options = Options()
 chrome_options.add_argument("--headless=new")
+chrome_options.add_argument("--blink-settings=imagesEnabled=false")
 driver = webdriver.Chrome(options=chrome_options)
 driver.get(url)
 
