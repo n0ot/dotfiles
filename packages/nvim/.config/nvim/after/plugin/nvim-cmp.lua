@@ -1,11 +1,11 @@
 local ok, cmp, luasnip
 ok, cmp = pcall(require, 'cmp')
 if not ok then
-	return
+  return
 end
 ok, luasnip = pcall(require, 'luasnip')
 if not ok then
-	return
+  return
 end
 
 require('luasnip.loaders.from_vscode').lazy_load()
@@ -24,10 +24,7 @@ cmp.setup {
     ['<C-f>'] = cmp.mapping.scroll_docs(4),
     ['<C-e>'] = cmp.mapping.abort(),
     ['<C-Space>'] = cmp.mapping.complete {},
-    ['<M-CR>'] = cmp.mapping.confirm {
-      behavior = cmp.ConfirmBehavior.Replace,
-      select = true,
-    },
+    ['<C-y>'] = cmp.mapping.confirm { select = true },
     ['<Tab>'] = cmp.mapping(function(fallback)
       if cmp.visible() then
         cmp.select_next_item()
@@ -44,6 +41,16 @@ cmp.setup {
         luasnip.jump(-1)
       else
         fallback()
+      end
+    end, { 'i', 's' }),
+    ['<C-l>'] = cmp.mapping(function()
+      if luasnip.expand_or_locally_jumpable() then
+        luasnip.expand_or_jump()
+      end
+    end, { 'i', 's' }),
+    ['<C-h>'] = cmp.mapping(function()
+      if luasnip.locally_jumpable(-1) then
+        luasnip.jump(-1)
       end
     end, { 'i', 's' }),
   },
