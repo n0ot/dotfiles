@@ -226,7 +226,7 @@ function:cpp {
 
 function+hnn {
     sw-
-    /^{upvote}$/f+1
+    /^\d+\.$/f+2
     if(?) {
         /^{More}$/f
     }
@@ -234,15 +234,15 @@ function+hnn {
 
 function+hnp {
     sw-
-    # If we're on the first line of the post title, going up a line will move
-    # to this posts {upvote} link, so we can then search for the one before it.
+    # If we're on the first line of the post title, going up two lines will move
+    # to this posts number, so we can then search for the one before it.
     # If we're not of the first line of this post's title, <hnp will move there
     # instead of going to the previous post.
-    -1 X
-    ?^{upvote}$?f+1
+    -2 X
+    ?^\d+\.$?f+2
     if(?) {
-        # No previous post was found, so undo the -1 X
-        +1 X
+        # No previous post was found, so undo the -2 X
+        +2 X
     }
 }
 

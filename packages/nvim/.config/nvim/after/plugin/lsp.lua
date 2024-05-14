@@ -54,7 +54,13 @@ local servers = {
     },
   },
   golangci_lint_ls = {},
-  gopls = {},
+  gopls = {
+    settings = {
+      gopls = {
+        allExperiments = true,
+      },
+    },
+  },
   lua_ls = {
     settings = {
       Lua = {
