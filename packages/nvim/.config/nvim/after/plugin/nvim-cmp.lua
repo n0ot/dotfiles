@@ -63,6 +63,5 @@ cmp.setup {
   sources = {
     { name = 'nvim_lsp' },
     { name = 'luasnip' },
-    { name = "copilot", group_index = 2 },
   },
 }
