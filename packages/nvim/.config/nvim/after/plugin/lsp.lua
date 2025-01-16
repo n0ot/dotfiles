@@ -76,7 +76,7 @@ local servers = {
       },
     },
   },
-  tsserver = {},
+  ts_ls = {},
   zls = {},
 }
 
