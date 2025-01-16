@@ -122,9 +122,24 @@ function+gg {
     b
     sw+
     i=~0
+    js+
     nostack     i*
     db1
     /^{h3 
+}
+
+function+kg {
+    db0
+    enew
+    r !echo '<form action="https://www.kagi.com/html/search">'
+    r !echo '<input name="q"><input type="submit">'
+    bw
+    b
+    sw+
+    i=~0
+    nostack     i*
+    db1
+    /^h3 
 }
 
 function+ddg {
