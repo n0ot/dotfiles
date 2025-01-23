@@ -2,10 +2,12 @@ jar=~/.local/share/edbrowse/cookiejar
 downdir = ~/downloads
 cachesize=0
 
-agent=Lynx/2.8.4rel.1 libwww-FM/2.14
+agent=Links (2.29; Linux 6.11.0-13-generic x86_64; GNU C 13.2; text)
 agent=Mozilla/4.0 (compatible; MSIE 5.5; Windows 98; Win 9x 4.90)
 agent=Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.1; WOW64; Trident/5.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; .NET4.0C; .NET4.0E)
 agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3112.113 Safari/537.36
+
+agentsite = google.com 1
 
 plugin {
     type = zip
@@ -122,10 +124,10 @@ function+gg {
     b
     sw+
     i=~0
-    js+
     nostack     i*
+    6
+    /^{
     db1
-    /^{h3 
 }
 
 function+kg {
