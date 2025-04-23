@@ -41,12 +41,7 @@ end
 
 -- per-server configuration
 local servers = {
-  efm = {
-    filetypes = {
-      'markdown',
-      'sh',
-    },
-  },
+  bashls = {},
   golangci_lint_ls = {},
   gopls = {
     settings = {
@@ -63,6 +58,7 @@ local servers = {
       },
     },
   },
+  marksman = {},
   pyright = {},
   rust_analyzer = {
     settings = {
