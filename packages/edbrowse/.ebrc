@@ -133,15 +133,29 @@ function+gg {
 function+kg {
     db0
     enew
-    r !echo '<form action="https://www.kagi.com/html/search">'
-    r !echo '<input name="q"><input type="submit">'
+    a
+    <form action="https://www.kagi.com/html/search">
+    <input name="q"><input type="submit">
+    .
     bw
     b
     sw+
     i=~0
     nostack     i*
-    db1
-    /^h3 
+    0A
+    2,$d
+    /kagi.com/X
+    if(*) {
+        bw
+        ^
+        db1
+        /^h3 
+    } else {
+        bw
+        ^
+        db1
+        ft
+    }
 }
 
 function+ddg {
