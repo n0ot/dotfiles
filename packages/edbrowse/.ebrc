@@ -99,8 +99,8 @@ plugin {
     program = mpv --really-quiet --no-audio-display --no-ytdl --af=scaletempo=stride=20:overlap=1 %i
 }
 
-include = ~/.config/edbrowse/plugins/gemini.ebrc
-include = ~/.config/edbrowse/plugins/chrome-render.ebrc
+include = ~/.config/edbrowse/plugins/gemini/gemini.ebrc
+include = ~/.config/edbrowse/plugins/chrome-render/chrome-render.ebrc
 
 function:init {
     db0
