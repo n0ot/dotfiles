@@ -2,7 +2,7 @@ plugin {
     type = */*
     desc = Gemini
     protocol = gemini
-    program = ~/.config/edbrowse/plugins/ebgmni.py %i
+    program = uv run --project ~/.config/edbrowse/plugins/gemini ~/.config/edbrowse/plugins/gemini/ebgmni.py %i
     outtype = h
 }
 

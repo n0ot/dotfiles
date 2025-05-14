@@ -2,7 +2,7 @@ plugin {
     type = */*
     desc = Render page with Chrome
     protocol = chrmrndr
-    program = ~/.config/edbrowse/plugins/chrome-render.py %i
+    program = uv run --project ~/.config/edbrowse/plugins/chrome-render ~/.config/edbrowse/plugins/chrome-render/chrome-render.py %i
     outtype = h
 }
 

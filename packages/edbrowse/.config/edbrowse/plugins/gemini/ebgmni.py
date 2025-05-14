@@ -1,8 +1,8 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 import argparse
 import base64
 import getpass
-import ignition  # pip install ignition-gemini
+import ignition
 import os
 import sys
 
