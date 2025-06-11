@@ -257,7 +257,7 @@ function:cpp {
 
 function+hnn {
     sw-
-    /^\d+\.$/f+2
+    /^\d+\.$/f+3
     if(?) {
         /^{More}$/f
     }
@@ -269,11 +269,11 @@ function+hnp {
     # to this posts number, so we can then search for the one before it.
     # If we're not of the first line of this post's title, <hnp will move there
     # instead of going to the previous post.
-    -2 X
-    ?^\d+\.$?f+2
+    -3 X
+    ?^\d+\.$?f+3
     if(?) {
-        # No previous post was found, so undo the -2 X
-        +2 X
+        # No previous post was found, so undo the -3 X
+        +3 X
     }
 }
 
