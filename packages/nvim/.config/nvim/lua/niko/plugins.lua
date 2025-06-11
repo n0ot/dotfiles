@@ -104,6 +104,14 @@ return {
   -- Java
   'mfussenegger/nvim-jdtls',
 
+  -- python
+  {
+    'benomahony/uv.nvim',
+    config = function()
+      require('uv').setup()
+    end,
+  },
+
   {
     'ThePrimeagen/harpoon',
     dependencies = {
