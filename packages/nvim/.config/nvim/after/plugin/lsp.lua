@@ -73,6 +73,7 @@ local servers = {
       },
     },
   },
+  tinymist = {},
   ts_ls = {},
   zls = {},
 }
