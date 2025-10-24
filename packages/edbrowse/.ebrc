@@ -63,7 +63,7 @@ plugin {
     type = markdown
     desc = markdown file
     suffix = md
-    program = pandoc --toc -f markdown %i
+    program = pandoc -f markdown %i
     outtype = H
     down_url
 }
@@ -179,12 +179,12 @@ function+ddg {
 function+bg {
     db0
     enew
-    r !echo '<form action="https://www.biblegateway.com/quicksearch">'
-    r !echo '<input name="quicksearch"><input name="qs_version"><input type="submit">'
+    r !printf %s '<form action="https://www.biblegateway.com/quicksearch">'
+    r !printf %s '<input name="quicksearch"><input name="qs_version"><input type="submit">'
     bw
     b
     i1=~0
-    i2=NRSVCE
+    i2=DRA
     i*
     db1
     /<Update>$/+2
