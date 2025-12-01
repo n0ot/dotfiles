@@ -149,7 +149,7 @@ if [[ -f /usr/lib/ssh-keychain.dylib ]]; then
 	# Run sc_auth create-ctk-identity -l <label> -t <bio|none> -k p-256-ne
 	# Then Use sc_auth list-ctk-identities to see them,
 	# and ssh-add -K to add them to the agent.
-	# /usr/sbin/sc_auth is a bash script; see it for more into.
+	# /usr/sbin/sc_auth is a bash script; see it for more info.
 	# This replaces Secretive.
 	export SSH_SK_PROVIDER=/usr/lib/ssh-keychain.dylib
 fi
