@@ -42,6 +42,9 @@ end
 -- per-server configuration
 local servers = {
   bashls = {},
+  clangd = {
+    filetypes = { "c", "c++", "cpp", "h", "objc", "objcpp" }, -- Exclude .proto
+  },
   golangci_lint_ls = {},
   gopls = {
     settings = {
@@ -59,7 +62,16 @@ local servers = {
     },
   },
   marksman = {},
-  pyright = {},
+  protols = {
+    before_init = function(_, config)
+      config.init_options = {
+        include_paths = {
+          "proto",
+          ".protodep",
+        },
+      }
+    end,
+  },
   ruff = {},
   rust_analyzer = {
     settings = {
