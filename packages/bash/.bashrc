@@ -12,7 +12,7 @@ export GIT_PS1_SHOWDIRTYSTATE=yes
 export GIT_PS1_SHOWSTASHSTATE=yes
 export GIT_PS1_SHOWUNTRACKEDFILES=yes
 host=''
-if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
+if [[ -n $SSH_CLIENT || -n $SSH_TTY ]]; then
 	host='@\h'
 fi
 PROMPT_COMMAND='__git_ps1 "\u${host}:\W" "\\\$ "'
@@ -36,7 +36,7 @@ export LESSOPEN="|$HOME/.bash_helpers/lessopen.sh %s"
 
 # Easily move up directories
 ..() {
-	if [ -z "$1" ]; then
+	if [[ -z $1 ]]; then
 		cd ..
 		return
 	fi
@@ -45,7 +45,7 @@ export LESSOPEN="|$HOME/.bash_helpers/lessopen.sh %s"
 		echo "..: $1 is not a number" 2>&1
 		return
 	fi
-	if [ "$1" -lt 1 ]; then
+	if [[ $1 -lt 1 ]]; then
 		echo "..: You must move up 1 or more directories" 2>&1
 		return
 	fi
@@ -82,10 +82,10 @@ fi
 # this, if it's already enabled in /etc/bash.bashrc and /etc/profile
 # sources /etc/bash.bashrc).
 if ! shopt -oq posix; then
-	if [ -f /usr/share/bash-completion/bash_completion ]; then
+	if [[ -f /usr/share/bash-completion/bash_completion ]]; then
 		# shellcheck disable=SC1091 # sourced file may or may not exist
 		. /usr/share/bash-completion/bash_completion
-	elif [ -f /etc/bash_completion ]; then
+	elif [[ -f /etc/bash_completion ]]; then
 		# shellcheck disable=SC1091 # sourced file may or may not exist
 		. /etc/bash_completion
 	fi
@@ -98,13 +98,13 @@ if hash brew 2>/dev/null; then
 	[[ -r "$BREW_PREFIX/etc/bash_completion" ]] && . "$BREW_PREFIX/etc/bash_completion"
 fi
 
-if [ -n "$COMPLETION_DIR" ]; then
+if [[ -n $COMPLETION_DIR ]]; then
 	hash doctl 2>/dev/null && doctl completion bash >"$COMPLETION_DIR/doctl"
 	hash rustup 2>/dev/null && rustup completions bash >"$COMPLETION_DIR/rustup"
 fi
 
 # Add fzf bindings, and set its default find utility to fd, if possible.
-if [ -f "$HOME/.fzf.bash" ]; then
+if [[ -f $HOME/.fzf.bash ]]; then
 	# shellcheck disable=SC1091 # sourced file may or may not exist
 	. "$HOME/.fzf.bash"
 	if hash fd 2>/dev/null; then
@@ -124,7 +124,7 @@ if [ -f "$HOME/.fzf.bash" ]; then
 	git-co() {
 		local branches
 		mapfile -t branches < <(fzf-git-branches -a)
-		if [ ${#branches[@]} -ne 1 ]; then
+		if [[ ${#branches[@]} -ne 1 ]]; then
 			echo "Exactly one branch must be selected for checkout" >&2
 			return 1
 		fi
@@ -134,7 +134,7 @@ if [ -f "$HOME/.fzf.bash" ]; then
 	git-br-del() {
 		local branches
 		mapfile -t branches < <(fzf-git-branches)
-		if [ ${#branches[@]} -lt 1 ]; then
+		if [[ ${#branches[@]} -lt 1 ]]; then
 			echo "At least one branch must be selected for deletion" >&2
 			return 1
 		fi
@@ -144,15 +144,25 @@ if [ -f "$HOME/.fzf.bash" ]; then
 	alias fzfpf="fzf --preview 'less {}' --bind shift-up:preview-page-up,shift-down:preview-page-down --preview-window=down,70%"
 fi
 
+if [[ -f /usr/lib/ssh-keychain.dylib ]]; then
+	# # Use the SecureEnclave on Mac to store resident keys.
+	# Run sc_auth create-ctk-identity -l <label> -t <bio|none> -k p-256-ne
+	# Then Use sc_auth list-ctk-identities to see them,
+	# and ssh-add -K to add them to the agent.
+	# /usr/sbin/sc_auth is a bash script; see it for more into.
+	# This replaces Secretive.
+	export SSH_SK_PROVIDER=/usr/lib/ssh-keychain.dylib
+fi
+
 # Start an ssh agent, or use one that is already running
 ssh-add -l &>/dev/null
-if [ "$?" == 2 ]; then
+if [[ "$?" -eq 2 ]]; then
 	# No agent is being used. Try to use one that is already running.
-	test -r ~/.ssh/agent &&
+	[[ -r ~/.ssh/agent ]] &&
 		eval "$(<~/.ssh/agent)" >/dev/null
 
 	ssh-add -l &>/dev/null
-	if [ "$?" == 2 ]; then
+	if [[ "$?" -eq 2 ]]; then
 		# Either ~/.ssh/agent doesn't exist, or the agent it refers to is no longer running.
 		# Start a new one and save it's info in ~/.ssh/agent
 		(
@@ -160,8 +170,12 @@ if [ "$?" == 2 ]; then
 			ssh-agent >~/.ssh/agent
 		)
 		eval "$(<~/.ssh/agent)" >/dev/null
-		ssh-add
 	fi
+fi
+ssh-add -l &>/dev/null
+if [[ "$?" -eq 1 ]]; then
+	ssh-add
+	[[ -n $SSH_SK_PROVIDER ]] && SSH_ASKPASS=true SSH_ASKPASS_REQUIRE=force ssh-add -Kq
 fi
 
 # All machine-local changes go in .bashrc.local, and will not be tracked
