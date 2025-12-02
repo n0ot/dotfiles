@@ -154,29 +154,46 @@ if [[ -f /usr/lib/ssh-keychain.dylib ]]; then
 	export SSH_SK_PROVIDER=/usr/lib/ssh-keychain.dylib
 fi
 
-# Start an ssh agent, or use one that is already running
-ssh-add -l &>/dev/null
-if [[ "$?" -eq 2 ]]; then
+# Start an ssh agent, or use one that is already running,
+# then add keys if there are none.
+
+add_ssh_keys() {
+	local exit_code
+	ssh-add -l &>/dev/null
+	exit_code=$?
+	# 0 = Agent is running, and there are keys; nothing to do
+	# # 1 = agent running, but no keys; add them
+	# >1 = agent not running, something else wrong; let the caller deal with it
+	[[ $exit_code -ne 1 ]] && return $exit_code
+
+	ssh-add || return $?
+	[[ -n $SSH_SK_PROVIDER ]] && SSH_ASKPASS=true SSH_ASKPASS_REQUIRE=force ssh-add -Kq || return $?
+}
+
+get_ssh_agent() {
+	local exit_code
+	add_ssh_keys
+	exit_code=$?
+	[[ $exit_code -ne 2 ]] && return $exit_code
+
 	# No agent is being used. Try to use one that is already running.
 	[[ -r ~/.ssh/agent ]] &&
 		eval "$(<~/.ssh/agent)" >/dev/null
+	add_ssh_keys
+	exit_code=$?
+	[[ $exit_code -ne 2 ]] && return $exit_code
 
-	ssh-add -l &>/dev/null
-	if [[ "$?" -eq 2 ]]; then
-		# Either ~/.ssh/agent doesn't exist, or the agent it refers to is no longer running.
-		# Start a new one and save it's info in ~/.ssh/agent
-		(
-			umask 066
-			ssh-agent >~/.ssh/agent
-		)
-		eval "$(<~/.ssh/agent)" >/dev/null
-	fi
-fi
-ssh-add -l &>/dev/null
-if [[ "$?" -eq 1 ]]; then
-	ssh-add
-	[[ -n $SSH_SK_PROVIDER ]] && SSH_ASKPASS=true SSH_ASKPASS_REQUIRE=force ssh-add -Kq
-fi
+	# Either ~/.ssh/agent doesn't exist, or the agent it refers to is no longer running.
+	# Start a new one and save it's info in ~/.ssh/agent
+	(
+		umask 066
+		ssh-agent >~/.ssh/agent
+	)
+	eval "$(<~/.ssh/agent)" >/dev/null
+	add_ssh_keys || return $?
+}
+
+get_ssh_agent
 
 # All machine-local changes go in .bashrc.local, and will not be tracked
 # in this dotfiles repo.
