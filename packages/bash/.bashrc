@@ -8,14 +8,29 @@
 
 # Prompt
 . "$HOME/.bash_helpers/git-prompt.sh"
-export GIT_PS1_SHOWDIRTYSTATE=yes
-export GIT_PS1_SHOWSTASHSTATE=yes
-export GIT_PS1_SHOWUNTRACKEDFILES=yes
-host=''
-if [[ -n $SSH_CLIENT || -n $SSH_TTY ]]; then
-	host='@\h'
-fi
-PROMPT_COMMAND='__git_ps1 "\u${host}:\W" "\\\$ "'
+prompt_command() {
+	local exit=$?
+	local GIT_PS1_SHOWDIRTYSTATE=yes
+	local GIT_PS1_SHOWSTASHSTATE=yes
+	local GIT_PS1_SHOWUNTRACKEDFILES=yes
+	local GIT_PS1_SHOWUPSTREAM=auto
+	local GIT_PS1_SHOWCONFLICTSTATE=yes
+
+	local host=''
+	[[ -n $SSH_CLIENT || -n $SSH_TTY ]] && host='@\h'
+	local precmd="\\u${host}:\\W"
+	local postcmd='\$ '
+	if [[ $exit -ne 0 ]]; then
+		postcmd=" ($exit)$postcmd"
+		[[ $exit -ne $prompt_exit_code ]] && postcmd="\\a$postcmd"
+		prompt_exit_code="$exit"
+	else
+		prompt_exit_code=0
+	fi
+
+	__git_ps1 "$precmd" "$postcmd"
+}
+PROMPT_COMMAND=prompt_command
 
 # don't put duplicate lines or lines starting with space in the history.
 HISTCONTROL=ignoreboth
