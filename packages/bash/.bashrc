@@ -20,7 +20,7 @@ prompt_command() {
 	[[ -n $SSH_CLIENT || -n $SSH_TTY ]] && host='@\h'
 	local precmd="\\u${host}:\\W"
 	local postcmd='\$ '
-	[[ $exit -ne 0 ]] && postcmd=" \\a($exit)$postcmd"
+	[[ $exit -ne 0 ]] && postcmd=" ($exit)$postcmd"
 
 	__git_ps1 "$precmd" "$postcmd"
 }
