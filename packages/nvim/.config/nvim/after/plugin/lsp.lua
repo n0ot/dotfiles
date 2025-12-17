@@ -1,8 +1,4 @@
-local ok, lspconfig, mason, mason_lspconfig
-ok, lspconfig = pcall(require, 'lspconfig')
-if not ok then
-  return
-end
+local ok, mason, mason_lspconfig
 ok, mason = pcall(require, 'mason')
 if not ok then
   return
@@ -87,6 +83,7 @@ local servers = {
   },
   tinymist = {},
   ts_ls = {},
+  ty = {},
   zls = {},
 }
 
@@ -96,7 +93,8 @@ local function setup_server(server, config)
     capabilities = capabilities,
   }, config)
 
-  lspconfig[server].setup(config)
+  vim.lsp.config(server, config)
+  vim.lsp.enable(server)
 end
 
 mason.setup()
