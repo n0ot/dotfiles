@@ -1,28 +1,10 @@
-require('niko.globals')
-
-
 -- Remap leader key
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
-
--- Plugins
--- Bootstrap lazy.nvim
-local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-if not vim.loop.fs_stat(lazypath) then
-  vim.fn.system({
-    "git",
-    "clone",
-    "--filter=blob:none",
-    "https://github.com/folke/lazy.nvim.git",
-    "--branch=stable", -- latest stable release
-    lazypath,
-  })
-end
-vim.opt.rtp:prepend(lazypath)
-
-require("lazy").setup("niko.plugins")
-
+require('niko.plugins')
+require('niko.lsp')
+require('niko.statusline')
 
 -- Settings
 vim.opt.hidden = true
@@ -60,37 +42,5 @@ vim.keymap.set('n', '<leader>C', function() vim.cmd.bdel{ bang = true } end)
 
 vim.keymap.set('n', '<leader>e', '<Cmd>Explore<Cr>')
 
--- Select last pasted text
-vim.keymap.set('n', 'gp', '`[' .. vim.fn.strpart(vim.fn.getregtype(), 0, 1) .. '`]')
-
 -- Delete to null register
 vim.keymap.set('x', '<Leader>d', '"_d')
-
-vim.keymap.set('n', '<Leader><Leader>x', SaveAndSource)
-
-
--- Statusline
-local function warn(msg)
-    return '%#warningmsg#' .. msg .. '%*'
-end
-
-local statusLine = {
-    '%{mode()} ',
-    -- Filename (tail)
-    '%t ',
-    -- Warn if file format is not unix
-    warn("%{&ff!='unix'?'['.&ff.'] ':''}"),
-    -- Warn if encoding is not utf-8
-    warn("%{(&fenc!='utf-8'&&&fenc!='')?'['.&fenc.'] ':''}"),
-    -- Readonly flag
-    '%r',
-    -- Modified flag
-    '%m',
-    -- File type
-    '%y ',
-    -- Show git branch/commit info
-    '%{FugitiveStatusline()}',
-}
-
-vim.o.laststatus = 2
-vim.o.statusline = table.concat(statusLine)
