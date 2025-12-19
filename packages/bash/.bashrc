@@ -113,9 +113,8 @@ if [[ -n $COMPLETION_DIR ]]; then
 fi
 
 # Add fzf bindings, and set its default find utility to fd, if possible.
-if [[ -f $HOME/.fzf.bash ]]; then
-	# shellcheck disable=SC1091 # sourced file may or may not exist
-	. "$HOME/.fzf.bash"
+if hash fzf 2>/dev/null; then
+	eval "$(fzf --bash)"
 	if hash fd 2>/dev/null; then
 		export FZF_DEFAULT_COMMAND="fd -HI -t f -E '.{git,svn,DS_Store}'"
 		export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
