@@ -1,12 +1,12 @@
+local go_updated_marker = vim.fn.stdpath("data") .. "/go_nvim_updated"
 local hooks = function(ev)
 	-- Use available |event-data|
 	local name, kind = ev.data.spec.name, ev.data.kind
 
-	if name == 'go.nvim' and kind == 'install' or kind == 'update' then
-		if not ev.data.active then
-			vim.cmd.packadd('go.nvim')
-		end
-		require("go.install").update_all_sync()
+	if name == 'go.nvim' and (kind == 'install' or kind == 'update') then
+		-- Create a marker file to indicate that go tools should be updated.
+		-- This is checked by a FileType autocommand for go files.
+		vim.fn.writefile({ "" }, go_updated_marker)
 	end
 end
 vim.api.nvim_create_autocmd('PackChanged', { callback = hooks })
