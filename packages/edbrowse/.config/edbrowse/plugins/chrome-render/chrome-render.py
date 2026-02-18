@@ -2,11 +2,10 @@
 
 import os
 import pathlib
+import subprocess
 import sys
-import time
 
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
+from playwright.sync_api import sync_playwright
 
 if len(sys.argv) < 2:
     print(f"Usage: {sys.argv[0]} <url>", file=sys.stderr)
@@ -15,27 +14,23 @@ if len(sys.argv) < 2:
 # Edbrowse prepends `chrmrndr://` to the URL to call the plugin that executes this script.
 url = sys.argv[1].removeprefix('chrmrndr://')
 if os.path.exists(url):
-    # This is a local file.
-    # Chrome expects `file://...`
     url = pathlib.Path(os.path.abspath(url)).as_uri()
 
-chrome_options = Options()
-chrome_options.add_argument("--headless=new")
-chrome_options.add_argument("--blink-settings=imagesEnabled=false")
-driver = webdriver.Chrome(options=chrome_options)
-driver.get(url)
+launch_args = {
+    "headless": True,
+    "args": ["--blink-settings=imagesEnabled=false"],
+}
 
-# Try to wait until the page is fully loaded, by continuing to pull the page
-# source until it hasn't changed for a certain period of time. Return what we
-# have, if it's been 4 seconds, even if the page is still changing.
-start = time.perf_counter()
-html = ''
-last_changed = start
-while (now := time.perf_counter()) - start < 4.0 and now - last_changed < 0.2:
-    time.sleep(0.05)
-    new_html = driver.page_source
-    if new_html != html:
-        html = new_html
-        last_changed = time.perf_counter()
-
-sys.stdout.write(html)
+with sync_playwright() as p:
+    try:
+        browser = p.chromium.launch(**launch_args)
+    except Exception:
+        subprocess.run(
+            [sys.executable, "-m", "playwright", "install", "chromium"],
+            check=True,
+        )
+        browser = p.chromium.launch(**launch_args)
+    page = browser.new_page()
+    page.goto(url, wait_until="networkidle")
+    sys.stdout.write(page.content())
+    browser.close()
