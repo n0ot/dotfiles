@@ -112,6 +112,7 @@ function:init {
     rl+
     z38
 ls=s
+fll 160
     db1
 }
 
