@@ -10,7 +10,7 @@ function+chrome {
     db0
     0A
     2,d
-    s;^<br><a href='\(.*\)'>$;b chrmrndr://$1;f
+    s;^<br/?><a href='\(.*\)'>$;b chrmrndr://$1;f
     bw
     up
     db1
