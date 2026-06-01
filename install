@@ -2,17 +2,33 @@
 
 set -eu
 
+if ! command -v stow &>/dev/null; then
+    if command -v brew &>/dev/null; then
+        brew install stow
+        if ! command -v stow &>/dev/null; then
+            echo >&2 "stow installation failed"
+            exit 1
+        fi
+    else
+        echo >&2 "stow is not installed"
+        exit 1
+    fi
+fi
+
 # If a package contains a directory, stow will create a symlink to that
 # directory, rather than creating the directory and putting symlinks inside it.
 # Normally, this is what we want, but in some cases, we don't want a directory
 # to be owned by the package we're installing. Creating those directories first
 # if they don't already exist will ensure that doesn't happen.
-mkdir -p "$HOME/{.config,.local}"
+mkdir -p "$HOME"/{.config,.local}
 
 for package_dir in packages/*/; do
     package="${package_dir%/}"
     package="${package##*/}"
     echo >&2 "Installing $package"
     stow -v -d packages -t "$HOME" -R "$package"
+    if command -v brew &>/dev/null && [[ -f "${package_dir}Brewfile" ]]; then
+        brew bundle --file="${package_dir}Brewfile"
+    fi
     echo >&2
 done

@@ -1,0 +1,4 @@
+brew "golangci-lint"
+brew "shellcheck"
+brew "shfmt"
+brew "tree-sitter-cli"

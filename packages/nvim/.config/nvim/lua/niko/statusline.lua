@@ -3,7 +3,11 @@ local function warn(msg)
     return '%#warningmsg#' .. msg .. '%*'
 end
 
-local statusLine = {
+local fugitive_section = vim.fn.exists('*FugitiveStatusline') == 1
+    and '%{FugitiveStatusline()}'
+    or ''
+
+local status_line = {
     '%{mode()} ',
     -- Filename (tail)
     '%t ',
@@ -18,8 +22,8 @@ local statusLine = {
     -- File type
     '%y ',
     -- Show git branch/commit info
-    '%{FugitiveStatusline()}',
+    fugitive_section,
 }
 
-vim.o.laststatus = 2
-vim.o.statusline = table.concat(statusLine)
+vim.o.laststatus = 3
+vim.o.statusline = table.concat(status_line)

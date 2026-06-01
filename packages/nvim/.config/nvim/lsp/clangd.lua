@@ -1,4 +1,4 @@
 ---@type vim.lsp.Config
 return {
-    filetypes = { "c", "c++", "cpp", "h", "objc", "objcpp" }, -- Exclude .proto
+    filetypes = { "c", "cpp", "objc", "objcpp" }, -- Exclude .proto
 }
