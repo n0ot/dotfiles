@@ -19,3 +19,7 @@ fi
 # Remove duplicate entries in $PATH
 PATH="$(echo -n "$PATH" | awk -v RS=: '!($0 in components) { components[$0]; print }' | paste -d: -s -)"
 export PATH
+
+#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+export SDKMAN_DIR="$HOME/.sdkman"
+[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"

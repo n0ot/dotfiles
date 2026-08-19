@@ -42,3 +42,5 @@ require("mason-lspconfig").setup({
 
 vim.lsp.enable(servers)
 
+-- Installed through Homebrew rather than Mason.
+vim.lsp.enable("kotlin_lsp")

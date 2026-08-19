@@ -22,7 +22,7 @@ vim.env.PATH = vim.fn.stdpath("data") .. "/mason/bin:" .. vim.env.PATH
 require("lazydev").setup({})
 local ts_parsers = {
 	"bash", "c", "cpp", "go", "gomod", "gosum",
-	"lua", "markdown", "proto", "python", "rust",
+	"kotlin", "lua", "markdown", "proto", "python", "rust",
 	"typescript", "typst", "yaml", "zig", "vim", "vimdoc",
 }
 require("nvim-treesitter").setup({
