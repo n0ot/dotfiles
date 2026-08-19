@@ -213,3 +213,9 @@ get_ssh_agent
 # but switching to vi mode, adding vi-bindings, and switching back to emacs mode doesn't seem to work.
 bind '"\ee": vi-editing-mode'
 bind -m vi '"\ee": emacs-editing-mode'
+
+# Load Ghostty's shell integration. Ghostty injects this automatically into
+# shells it starts directly, but shells started inside tmux need to source it.
+if [[ -r ${GHOSTTY_RESOURCES_DIR:-}/shell-integration/bash/ghostty.bash ]]; then
+	. "$GHOSTTY_RESOURCES_DIR/shell-integration/bash/ghostty.bash"
+fi
