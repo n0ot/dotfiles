@@ -1,4 +1,8 @@
 vim.pack.add({
+	{
+		src = "https://github.com/n0ot/lector.nvim",
+		version = "master",
+	},
 	{ src = "https://github.com/neovim/nvim-lspconfig" },
 	{ src = "https://github.com/mason-org/mason.nvim" },
 	{ src = "https://github.com/mason-org/mason-lspconfig.nvim" },
@@ -20,6 +24,7 @@ vim.pack.add({
 vim.env.PATH = vim.fn.stdpath("data") .. "/mason/bin:" .. vim.env.PATH
 
 require("lazydev").setup({})
+require("lector").setup({})
 local ts_parsers = {
 	"bash", "c", "cpp", "go", "gomod", "gosum",
 	"kotlin", "lua", "markdown", "proto", "python", "rust",
