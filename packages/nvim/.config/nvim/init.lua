@@ -15,6 +15,8 @@ vim.opt.breakindent = true
 vim.opt.completeopt = 'menuone,noselect'
 vim.opt.termguicolors = true
 vim.opt.signcolumn = "yes"
+-- Keep mouse reporting active in prompts so Lector can route review-cursor clicks.
+vim.opt.mouse = 'a'
 
 -- Use US English spelling dictionary
 -- Use set spell to turn it on
