@@ -30,7 +30,7 @@
       "src": "https://github.com/folke/lazydev.nvim"
     },
     "lector.nvim": {
-      "rev": "4a0b1625e5535d854c5e2efb49b409c1b2daa0fd",
+      "rev": "98372cfc3b69c8115e37be2ac2ab423a517f48e3",
       "src": "https://github.com/n0ot/lector.nvim",
       "version": "'master'"
     },

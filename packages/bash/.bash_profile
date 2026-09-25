@@ -3,10 +3,10 @@ prepend_to_path "$HOME/bin"
 prepend_to_path "$HOME/.local/bin"
 
 if [ -f "/opt/homebrew/bin/brew" ]; then
-	eval "$(/opt/homebrew/bin/brew shellenv)"
+    eval "$(/opt/homebrew/bin/brew shellenv)"
 fi
 if hash brew 2>/dev/null; then
-	prepend_to_path "$(brew --prefix)/opt/sqlite/bin"
+    prepend_to_path "$(brew --prefix)/opt/sqlite/bin"
 fi
 
 # All machine-local changes go in .bash_profile.local, and will not be tracked
