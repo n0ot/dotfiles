@@ -29,11 +29,6 @@ PROMPT_COMMAND=prompt_command
 # don't put duplicate lines or lines starting with space in the history.
 HISTCONTROL=ignoreboth
 
-if hash gls 2>/dev/null; then
-    alias ls='gls --group-directories-first -Fh'
-else
-    alias ls='ls -Fh'
-fi
 alias l1="ls -1"
 alias la1="l1 -A"
 
@@ -69,9 +64,6 @@ export LESSOPEN="|$HOME/.bash_helpers/lessopen.sh %s"
 if hash mpv 2>/dev/null; then
     alias mpva="mpv --no-audio-display --no-ytdl --no-video --af=scaletempo=stride=20:overlap=1"
     alias mpvay="mpv --ytdl-format=bestaudio --no-audio-display --no-video --af=scaletempo=stride=20:overlap=1"
-fi
-if hash mpsyt 2>/dev/null; then
-    alias mpsyt="mpsyt --no-textart"
 fi
 
 # The last editor installed will become the default editor
@@ -145,57 +137,6 @@ if hash fzf 2>/dev/null; then
 
     alias fzfpf="fzf --preview 'less {}' --bind shift-up:preview-page-up,shift-down:preview-page-down --preview-window=down,70%"
 fi
-
-if [[ -f /usr/lib/ssh-keychain.dylib ]]; then
-    # # Use the SecureEnclave on Mac to store resident keys.
-    # Run sc_auth create-ctk-identity -l <label> -t <bio|none> -k p-256-ne
-    # Then Use sc_auth list-ctk-identities to see them,
-    # and ssh-add -K to add them to the agent.
-    # /usr/sbin/sc_auth is a bash script; see it for more info.
-    # This replaces Secretive.
-    export SSH_SK_PROVIDER=/usr/lib/ssh-keychain.dylib
-fi
-
-# Start an ssh agent, or use one that is already running,
-# then add keys if there are none.
-
-add_ssh_keys() {
-    local exit_code
-    ssh-add -l &>/dev/null
-    exit_code=$?
-    # 0 = Agent is running, and there are keys; nothing to do
-    # # 1 = agent running, but no keys; add them
-    # >1 = agent not running, something else wrong; let the caller deal with it
-    [[ $exit_code -ne 1 ]] && return $exit_code
-
-    ssh-add || return $?
-    [[ -n $SSH_SK_PROVIDER ]] && SSH_ASKPASS=true SSH_ASKPASS_REQUIRE=force ssh-add -Kq || return $?
-}
-
-get_ssh_agent() {
-    local exit_code
-    add_ssh_keys
-    exit_code=$?
-    [[ $exit_code -ne 2 ]] && return $exit_code
-
-    # No agent is being used. Try to use one that is already running.
-    [[ -f ~/.ssh/agent.env && -r ~/.ssh/agent.env ]] &&
-        eval "$(<~/.ssh/agent.env)" >/dev/null
-    add_ssh_keys
-    exit_code=$?
-    [[ $exit_code -ne 2 ]] && return $exit_code
-
-    # Either ~/.ssh/agent.env doesn't exist, or the agent it refers to is no longer running.
-    # Start a new one and save it's info in ~/.ssh/agent.env
-    (
-        umask 066
-        ssh-agent >~/.ssh/agent.env
-    )
-    eval "$(<~/.ssh/agent.env)" >/dev/null
-    add_ssh_keys || return $?
-}
-
-get_ssh_agent
 
 # All machine-local changes go in .bashrc.local, and will not be tracked
 # in this dotfiles repo.
